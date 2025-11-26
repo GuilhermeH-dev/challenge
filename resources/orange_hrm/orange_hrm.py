@@ -4,7 +4,6 @@ from resources.sites import Sites
 from pathlib import Path
 import requests
 import csv
-import time
 from retry import retry
 import logging
 
@@ -27,7 +26,7 @@ class OrangeHRM(Sites):
         )
         self.browser.find_element(By.XPATH, LoginPageLocators.PASSWORD_INPUT).send_keys(
             "admin123"
-        )
+        )  # ideally, we should use a more secure way to store the password (e.g. bitwarden, BotCity Credentials etc.)
         self.browser.find_element(By.XPATH, LoginPageLocators.LOGIN_BUTTON).click()
         self.wait_until_element_is_visible(
             By.XPATH, DashboardPageLocators.DASHBOARD_TITLE
@@ -41,7 +40,6 @@ class OrangeHRM(Sites):
         ).click()
         self.wait_until_element_is_visible(By.XPATH, DashboardPageLocators.ADD_BUTTON)
         self.browser.find_element(By.XPATH, DashboardPageLocators.ADD_BUTTON).click()
-        time.sleep(2)  # pequeno delay para garantir que a tela carregou
         logger.info("Add candidate form opened.")
 
     def download_candidates_csv(self, url: str, save_path: str) -> Path:
@@ -84,6 +82,9 @@ class OrangeHRM(Sites):
         middle = full_name[1] if len(full_name) == 3 else ""
         last = full_name[-1]
 
+        self.wait_until_element_is_visible(
+            By.XPATH, DashboardPageLocators.FIRST_NAME_INPUT
+        )
         self.browser.find_element(
             By.XPATH, DashboardPageLocators.FIRST_NAME_INPUT
         ).send_keys(first)
