@@ -6,6 +6,7 @@ import requests
 import csv
 from retry import retry
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -22,10 +23,10 @@ class OrangeHRM(Sites):
         )
         self.wait_until_element_is_visible(By.XPATH, LoginPageLocators.USERNAME_INPUT)
         self.browser.find_element(By.XPATH, LoginPageLocators.USERNAME_INPUT).send_keys(
-            "Admin"
+            os.getenv("USERNAME")
         )
         self.browser.find_element(By.XPATH, LoginPageLocators.PASSWORD_INPUT).send_keys(
-            "admin123"
+            os.getenv("PASSWORD")
         )  # ideally, we should use a more secure way to store the password (e.g. bitwarden, BotCity Credentials etc.)
         self.browser.find_element(By.XPATH, LoginPageLocators.LOGIN_BUTTON).click()
         self.wait_until_element_is_visible(
