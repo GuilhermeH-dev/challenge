@@ -6,28 +6,25 @@ import requests
 import csv
 from retry import retry
 import logging
-import os
 
 logger = logging.getLogger(__name__)
 
 
 class OrangeHRM(Sites):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, username: str, password: str, url: str):
+        super().__init__(username=username, password=password, url=url)
 
     def login(self):
         """Log in to OrangeHRM."""
         logger.info("Accessing OrangeHRM login page.")
-        self.browser.get(
-            "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"
-        )
+        self.browser.get(self.url)
         self.wait_until_element_is_visible(By.XPATH, LoginPageLocators.USERNAME_INPUT)
         self.browser.find_element(By.XPATH, LoginPageLocators.USERNAME_INPUT).send_keys(
-            os.getenv("USERNAME")
+            self.username
         )
         self.browser.find_element(By.XPATH, LoginPageLocators.PASSWORD_INPUT).send_keys(
-            os.getenv("PASSWORD")
-        )  # ideally, we should use a more secure way to store the password (e.g. bitwarden, BotCity Credentials etc.)
+            self.password
+        )
         self.browser.find_element(By.XPATH, LoginPageLocators.LOGIN_BUTTON).click()
         self.wait_until_element_is_visible(
             By.XPATH, DashboardPageLocators.DASHBOARD_TITLE

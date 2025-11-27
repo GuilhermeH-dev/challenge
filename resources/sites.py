@@ -8,6 +8,11 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class Sites:
+    def __init__(self, username: str, password: str, url: str):
+        self.username = username
+        self.password = password
+        self.url = url
+
     def setup_browser(
         self,
         timeout: int = 30,

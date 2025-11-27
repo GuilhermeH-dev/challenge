@@ -1,6 +1,7 @@
 from resources.orange_hrm.orange_hrm import OrangeHRM
 from pathlib import Path
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -8,7 +9,12 @@ logging.basicConfig(
 )
 
 if __name__ == "__main__":
-    orange_hrm = OrangeHRM()
+    # Ideally, we should use a more secure way to store the username, password (e.g. bitwarden, BotCity Credentials etc)
+    orange_hrm = OrangeHRM(
+        username=os.getenv("USERNAME"),
+        password=os.getenv("PASSWORD"),
+        url="https://opensource-demo.orangehrmlive.com/web/index.php/auth/login",
+    )
     try:
         orange_hrm.setup_browser()
         orange_hrm.login()
